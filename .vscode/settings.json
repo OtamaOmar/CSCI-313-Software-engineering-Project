@@ -1,0 +1,20 @@
+{
+  // Use PostCSS language support and let extensions provide Tailwind-aware validation.
+  // Disable the built-in CSS/SCSS/LESS validator so PostCSS/Tailwind extensions can handle at-rules.
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+
+  // Treat .css files as PostCSS so PostCSS / Tailwind extensions understand directives like @tailwind
+  "files.associations": {
+    "*.css": "postcss"
+  },
+
+  // Help the Tailwind IntelliSense extension recognize files using PostCSS
+  "tailwindCSS.includeLanguages": {
+    "postcss": "css",
+    "javascript": "javascript",
+    "javascriptreact": "javascriptreact",
+    "typescriptreact": "typescriptreact"
+  }
+}
