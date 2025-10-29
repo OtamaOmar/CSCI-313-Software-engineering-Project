@@ -1,73 +1,65 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss/preflight";
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Custom theme tokens */
+@theme {
+  --color-primary: #10b981;
+  --font-sans: "Poppins", "Inter", system-ui, sans-serif;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-a:hover {
-  color: #535bf2;
+
+/* Scrollbar hidden but scrollable */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Global styles */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg, #fff);
+  color: var(--color-text, #111827);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Light/Dark backgrounds handled via classes */
+.dark body {
+  background-color: #0a0a0a;
+  color: #f9fafb;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* Rebuild buttons manually */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #059669; /* emerald-600 */
+}
+
+.btn-outline {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-primary);
+  color: white;
 }
