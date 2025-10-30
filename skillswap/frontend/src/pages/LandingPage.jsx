@@ -8,7 +8,7 @@ export default function LandingPage() {
     <div className="min-h-screen overflow-y-scroll bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col">
       {/* Navbar */}
       <header className="w-full flex items-center justify-between px-8 py-4 border-b border-gray-200 dark:border-gray-800">
-        <h1 className="text-2xl font-semibold text-primary">SkillSwap</h1>
+        <h1 className="text-2xl font-semibold text-primary">SkillSwap for beginnerss</h1>
 
         <div className="flex items-center gap-4">
           <nav className="hidden md:flex gap-6 text-sm font-medium">
