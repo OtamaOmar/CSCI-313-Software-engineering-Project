@@ -99,7 +99,7 @@ export default function LandingPage() {
                 “SkillSwap helped me learn JavaScript while teaching Photoshop.
                 It’s genius!”
               </p>
-              <p className="font-semibold text-primary">— Lina, Design Student</p>
+              <p className="font-semibold text-primary">— Hamza, Design Student</p>
             </div>
             <div className="p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 shadow-sm">
               <p className="italic mb-4">
