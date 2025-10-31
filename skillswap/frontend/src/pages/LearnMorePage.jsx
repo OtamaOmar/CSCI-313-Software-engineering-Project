@@ -9,23 +9,11 @@ export default function LearnMore() {
       {/* Navbar */}
       <header className="w-full flex items-center justify-between px-8 py-4 border-b border-gray-200 dark:border-gray-800">
         <h1 className="text-2xl font-semibold text-primary">SkillSwap</h1>
-
-        <nav className="hidden md:flex gap-6 text-sm font-medium">
-          <a href="#features" className="hover:text-primary transition-colors cursor-pointer">
-            Features
-          </a>
-          <a href="#reviews" className="hover:text-primary transition-colors cursor-pointer">
-            Reviews
-          </a>
-          <a href="#contact" className="hover:text-primary transition-colors cursor-pointer">
-            Contact
-          </a>
-        </nav>
       </header>
 
       {/* Content */}
       <div className="min-h-screen px-8 py-16">
-        <h1 className="text-4xl font-bold text-green-600 text-center mb-6">
+        <h1 className="text-4xl font-bold text-primary text-center mb-6">
           What is SkillSwap?
         </h1>
 
@@ -36,7 +24,7 @@ export default function LearnMore() {
         </p>
 
         {/* How It Works */}
-        <h2 className="text-4xl font-bold text-green-600 text-center mb-6">How It Works</h2>
+        <h2 className="text-4xl font-bold text-primary text-center mb-6">How It Works</h2>
         <div className="max-w-3xl mx-auto space-y-4 text-gray-700 dark:text-gray-400">
           <p>1️⃣ <strong>Create your profile</strong> — List skills you can teach & skills you want to learn.</p>
           <p>2️⃣ <strong>Match with others</strong> — Our system suggests students who complement your skills.</p>
@@ -45,20 +33,20 @@ export default function LearnMore() {
         </div>
 
         {/* Features */}
-        <h2 className="text-4xl font-bold text-green-600 text-center mt-16 mb-6">Features</h2>
+        <h2 className="text-4xl font-bold text-primary text-center mt-16 mb-6">Features</h2>
         <div className="grid md:grid-cols-3 gap-7 max-w-5xl mx-auto">
           <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 shadow-sm">
-            <h3 className="text-xl font-semibold text-green-600 mb-2">Peer Learning</h3>
+            <h3 className="text-xl font-semibold text-primary mb-2">Peer Learning</h3>
             <p>Learn from real students who understand your pace and background.</p>
           </div>
 
           <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 shadow-sm">
-            <h3 className="text-xl font-semibold text-green-600 mb-2">Skill Matching</h3>
+            <h3 className="text-xl font-semibold text-primary mb-2">Skill Matching</h3>
             <p>A smart algorithm matches you with people offering the skills you need.</p>
           </div>
 
           <div className="p-6 rounded-xl bg-gray-50 dark:bg-gray-900 shadow-sm">
-            <h3 className="text-xl font-semibold text-green-600 mb-2">Flexible Scheduling</h3>
+            <h3 className="text-xl font-semibold text-primary mb-2">Flexible Scheduling</h3>
             <p>Choose lesson times that fit your daily routine easily.</p>
           </div>
         </div>
@@ -67,7 +55,7 @@ export default function LearnMore() {
         <div className="text-center mt-16">
           <button
             onClick={() => navigate("/login")}
-            className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition cursor-pointer"
+            className="px-6 py-3 bg-primary text-white rounded-lg shadow-md transition cursor-pointer hover:bg-primary/90 hover:shadow-lg btn btn-primary"
           >
             Get Started — It's Free 🚀
           </button>

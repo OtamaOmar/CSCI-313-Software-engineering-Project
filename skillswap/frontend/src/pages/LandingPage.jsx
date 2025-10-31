@@ -44,7 +44,10 @@ export default function LandingPage() {
             Get Started
           </button>
 
-          <button className="btn btn-outline cursor-pointer">
+          <button
+            onClick={() => navigate("/learn-more")}
+            className="btn btn-outline cursor-pointer"
+          >
             Learn More
           </button>
         </div>
