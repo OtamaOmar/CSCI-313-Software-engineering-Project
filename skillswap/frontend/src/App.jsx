@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage"; // ✅ Import the login page
 import LearnMorePage from "./pages/LearnMorePage";
 import FeedPage from "./pages/FeedPage";
 import ChatPage from "./pages/chat";
+import ForgetPassPage from "./pages/ForgetPassPage";
 
 export default function App() {
   return (
@@ -26,6 +27,9 @@ export default function App() {
 
         {/* 💬 CHAT PAGE */}
         <Route path="/chat" element={<ChatPage />} />
+
+        {/* 🔁 Forgot Password */}
+        <Route path="/forget-password" element={<ForgetPassPage />} />
 
       </Routes>
     </Router>

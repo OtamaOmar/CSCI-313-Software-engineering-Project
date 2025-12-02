@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -92,12 +93,12 @@ export default function LoginPage() {
               />
               Remember me
             </label>
-            <a
-              href="#"
+            <Link
+              to="/forget-password"
               className="text-primary hover:underline cursor-pointer transition-colors"
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           {/* Login button */}
