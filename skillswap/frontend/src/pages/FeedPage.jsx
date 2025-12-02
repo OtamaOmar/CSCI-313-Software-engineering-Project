@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, Search, Users, LogOut, Heart, MessageCircle, Share2, Plus, Mail, Bell } from "lucide-react";
+import { Menu, Search, Users, LogOut, Heart, MessageCircle, Share2, Plus, Mail, Bell, Home } from "lucide-react";
 
 export default function FeedPage() {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ export default function FeedPage() {
             src="https://i.pravatar.cc/40"
             alt="Profile"
             className="w-10 h-10 rounded-full cursor-pointer border border-gray-300 dark:border-gray-700"
-            onClick={() => setSettingsOpen(!settingsOpen)}
+            onClick={() => navigate("/profile")}
           />
 
           {/* Dropdown */}
@@ -118,7 +118,7 @@ export default function FeedPage() {
         >
           <div className="flex flex-col gap-2">
             <SidebarButton icon={<Menu />} text="Toggle" sidebarOpen={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} hidden={true} />
-            <SidebarButton icon={<Search />} text="Search" sidebarOpen={sidebarOpen} />
+            <SidebarButton icon={<Home />} text="Feed" sidebarOpen={sidebarOpen} onClick={() => navigate("/feed")} />
             <SidebarButton icon={<Users />} text="Friends" sidebarOpen={sidebarOpen} />
             <SidebarButton icon={<Mail />} text="Messages" sidebarOpen={sidebarOpen} />
             <SidebarButton icon={<Bell />} text="Notifications" sidebarOpen={sidebarOpen} />
