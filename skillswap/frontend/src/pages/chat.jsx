@@ -189,13 +189,12 @@ export default function ChatPage() {
 
         {/* CHAT WINDOW */}
         <main
-          className={`flex-1 flex flex-col transition-all duration-300
-            ${sidebarOpen ? "ml-64" : "ml-16"} ml-96`}
+          className={`flex-1 flex flex-col transition-all duration-300 ${sidebarOpen ? "ml-160" : "ml-112"} mr-0`}
         >
           {selectedChat !== null ? (
             <>
               {/* Chat Header */}
-              <div className="h-16 bg-gray-800 dark:bg-gray-800 border-b border-gray-700 dark:border-gray-700 px-6 flex items-center gap-4">
+             <div className="h-16 bg-red-800 dark:bg-gray-800 border-b border-gray-700 dark:border-gray-700 px-6 flex items-center gap-4">
                 <img
                   src={chats[selectedChat]?.avatar}
                   alt={chats[selectedChat]?.name}
