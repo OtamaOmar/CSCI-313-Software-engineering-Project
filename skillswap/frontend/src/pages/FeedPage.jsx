@@ -118,10 +118,7 @@ export default function FeedPage() {
         >
           <div className="flex flex-col gap-2">
             <SidebarButton icon={<Menu />} text="Toggle" sidebarOpen={sidebarOpen} onClick={() => setSidebarOpen(!sidebarOpen)} hidden={true} />
-<<<<<<< HEAD
             <SidebarButton icon={<Home />} text="Feed" sidebarOpen={sidebarOpen} onClick={() => navigate("/feed")} />
-=======
->>>>>>> Hamza-branch
             <SidebarButton icon={<Users />} text="Friends" sidebarOpen={sidebarOpen} />
             <SidebarButton icon={<Mail/>} text="Messages" sidebarOpen={sidebarOpen}onClick={() => navigate("/chat")} />
             <SidebarButton icon={<Bell />} text="Notifications" sidebarOpen={sidebarOpen} />

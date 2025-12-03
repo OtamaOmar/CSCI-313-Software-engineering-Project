@@ -119,7 +119,7 @@ export default function ChatPage() {
         <aside
           className={`
             fixed top-16 left-0 h-[calc(100vh-4rem)]
-            bg-gray-800 dark:bg-gray-950 border-r border-gray-700 dark:border-gray-900
+            bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-900
             flex flex-col justify-between z-20 transition-all duration-300
             ${sidebarOpen ? "w-64 p-4" : "w-16 p-2"}
           `}
@@ -144,20 +144,20 @@ export default function ChatPage() {
 
         {/* CHAT LIST */}
         <aside
-          className={`fixed top-16 h-[calc(100vh-4rem)] w-96 bg-gray-900 dark:bg-gray-900 border-r border-gray-700 dark:border-gray-800 overflow-y-auto transition-all duration-300 z-10
+          className={`fixed top-16 h-[calc(100vh-4rem)] w-96 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 overflow-y-auto transition-all duration-300 z-10
             ${sidebarOpen ? "left-64" : "left-16"}`}
         >
           <div className="p-3">
-            <h2 className="text-xl font-bold mb-3 text-white px-2">Chats</h2>
+            <h2 className="text-xl font-bold mb-3 text-gray-900 dark:text-white px-2">Chats</h2>
             <div className="space-y-0">
               {chats.map((chat) => (
                 <div
                   key={chat.id}
                   onClick={() => setSelectedChat(chat.id)}
-                  className={`p-3 cursor-pointer transition-colors border-b border-gray-800 dark:border-gray-800 ${
+                  className={`p-3 cursor-pointer transition-colors border-b border-gray-200 dark:border-gray-800 ${
                     selectedChat === chat.id
-                      ? "bg-gray-800 dark:bg-gray-800"
-                      : "hover:bg-gray-800 dark:hover:bg-gray-800"
+                      ? "bg-gray-200 dark:bg-gray-800"
+                      : "hover:bg-gray-100 dark:hover:bg-gray-800"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -168,7 +168,7 @@ export default function ChatPage() {
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-semibold text-sm text-white">{chat.name}</h3>
+                        <h3 className="font-semibold text-sm text-gray-900 dark:text-white">{chat.name}</h3>
                         <span className="text-xs text-gray-400">{chat.time}</span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -194,20 +194,20 @@ export default function ChatPage() {
           {selectedChat !== null ? (
             <>
               {/* Chat Header */}
-             <div className="h-16 bg-red-800 dark:bg-gray-800 border-b border-gray-700 dark:border-gray-700 px-6 flex items-center gap-4">
+             <div className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 flex items-center gap-4">
                 <img
                   src={chats[selectedChat]?.avatar}
                   alt={chats[selectedChat]?.name}
                   className="w-10 h-10 rounded-full"
                 />
                 <div>
-                  <h3 className="font-semibold text-white">{chats[selectedChat]?.name}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{chats[selectedChat]?.name}</h3>
                   <span className="text-xs text-gray-400">Active now</span>
                 </div>
               </div>
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-3 bg-gray-900 dark:bg-gray-950">
+              <div className="flex-1 overflow-y-auto p-6 space-y-3 bg-gray-50 dark:bg-gray-950">
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -217,7 +217,7 @@ export default function ChatPage() {
                       className={`max-w-md px-4 py-2 rounded-lg ${
                         message.sender === "me"
                           ? "bg-emerald-600 text-white rounded-br-none"
-                          : "bg-gray-800 text-white rounded-bl-none"
+                          : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-bl-none"
                       }`}
                     >
                       <p className="text-sm">{message.text}</p>
@@ -230,14 +230,14 @@ export default function ChatPage() {
               </div>
 
               {/* Message Input */}
-              <div className="h-16 bg-gray-800 dark:bg-gray-800 border-t border-gray-700 dark:border-gray-700 px-6 flex items-center gap-3">
+              <div className="h-16 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 flex items-center gap-3">
                 <input
                   type="text"
                   placeholder="Type a message..."
                   value={messageInput}
                   onChange={(e) => setMessageInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  className="flex-1 rounded-lg border-0 bg-gray-700 dark:bg-gray-900 text-white placeholder-gray-400 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="flex-1 rounded-lg border border-gray-300 dark:border-0 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
                 <button
                   onClick={handleSendMessage}
@@ -248,10 +248,10 @@ export default function ChatPage() {
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center bg-gray-900 dark:bg-gray-950">
+            <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-950">
               <div className="text-center">
-                <Mail size={64} className="mx-auto mb-4 text-gray-600 dark:text-gray-700" />
-                <h2 className="text-2xl font-bold mb-2 text-white">Select a conversation</h2>
+                <Mail size={64} className="mx-auto mb-4 text-gray-300 dark:text-gray-700" />
+                <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Select a conversation</h2>
                 <p className="text-gray-400">Choose a chat from the list to start messaging</p>
               </div>
             </div>
@@ -282,7 +282,7 @@ function SidebarButton({ icon, text, sidebarOpen, onClick, hidden }) {
       onClick={onClick}
       className={`
         flex items-center py-3 w-full rounded-md transition-colors duration-300 
-        hover:bg-gray-700 dark:hover:bg-gray-800 cursor-pointer text-gray-300
+        hover:bg-emerald-500/10 dark:hover:bg-gray-800 cursor-pointer text-gray-700 dark:text-gray-300
         ${sidebarOpen ? "gap-4 px-4" : "justify-center"}
       `}
     >
