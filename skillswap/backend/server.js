@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -221,3 +222,21 @@ app.put('/auth/profile', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`SkillSwap auth server listening on http://localhost:${PORT}`);
 });
+=======
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import userRoutes from "./routes/userRoutes.js";
+
+dotenv.config();
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/users", userRoutes);
+
+app.listen(process.env.PORT, () => {
+    console.log(`Backend running on port ${process.env.PORT}`);
+});
+>>>>>>> main
