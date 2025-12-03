@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, X, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../services/api";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -8,6 +9,7 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -15,6 +17,8 @@ export default function SignUp() {
     const formData = new FormData(e.target);
     const password = formData.get("password");
     const confirmPassword = formData.get("confirmPassword");
+    const fullName = formData.get("fullName");
+    const email = formData.get("email");
 
     // Validate passwords match
     if (password !== confirmPassword) {
@@ -23,14 +27,28 @@ export default function SignUp() {
       return;
     }
 
-    // TODO: Replace with actual signup API call
-    // Simulate successful signup
-    setShowSuccess(true);
-    
-    // Redirect to login page after 2 seconds
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
+    // Generate username from email (before @)
+    const username = email.split('@')[0];
+
+    setLoading(true);
+    setShowError(false);
+
+    try {
+      // Call the registration API with Supabase
+      await registerUser(username, email, password, fullName);
+      
+      // Show success message
+      setShowSuccess(true);
+      
+      // Redirect to login page after 2 seconds
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+      setShowError(true);
+      setLoading(false);
+    }
   };
 
   const closeError = () => {
@@ -130,6 +148,7 @@ export default function SignUp() {
               name="password"
               type={showPassword ? "text" : "password"}
               required
+              autoComplete="new-password"
               className="px-4 py-2 w-full rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none transition pr-10"
               placeholder="••••••••"
             />
@@ -152,6 +171,7 @@ export default function SignUp() {
               name="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
               required
+              autoComplete="new-password"
               className="px-4 py-2 w-full rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none transition pr-10"
               placeholder="••••••••"
             />
@@ -182,9 +202,10 @@ export default function SignUp() {
           {/* Sign up button */}
           <button
             type="submit"
-            className="btn btn-primary w-full cursor-pointer"
+            disabled={loading}
+            className="btn btn-primary w-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Sign Up
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
 
           {/* Login link */}

@@ -1,21 +1,56 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Search, Users, LogOut, Heart, MessageCircle, Share2, Plus, Mail, Bell, Home } from "lucide-react";
+import { getAllProfiles, getCurrentUserProfile } from "../services/api";
 
 export default function FeedPage() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [darkMode] = useState(localStorage.getItem("theme") === "dark");
+  const [profiles, setProfiles] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [friendSuggestions, setFriendSuggestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [posts, setPosts] = useState(
-    [...Array(10)].map((_, i) => ({
-      id: i,
-      content: `This is some sample feed content for post #${i + 1}.`,
-      likes: 12,
-      comments: 4,
-      shares: 2
-    }))
-  );
+  // Check if user is logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  // Fetch current user and all profiles
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch current user profile
+        const userProfile = await getCurrentUserProfile();
+        setCurrentUser(userProfile);
+        
+        // Fetch all profiles
+        const allProfiles = await getAllProfiles();
+        
+        // Filter out current user from profiles feed
+        const otherProfiles = allProfiles.filter(p => p.id !== userProfile.id);
+        setProfiles(otherProfiles);
+        
+        // Get random profiles for friend suggestions
+        const shuffled = [...otherProfiles].sort(() => 0.5 - Math.random());
+        setFriendSuggestions(shuffled.slice(0, 8));
+        
+      } catch (err) {
+        setError(err.message || "Failed to load data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // DARK MODE
   useEffect(() => {
@@ -27,20 +62,6 @@ export default function FeedPage() {
       localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
-
-  // REACTIONS HANDLER
-  const handleReaction = (postId, type) => {
-    setPosts(prev =>
-      prev.map(post => {
-        if (post.id === postId) {
-          if (type === "like") return { ...post, likes: post.likes + 1 };
-          if (type === "comment") return { ...post, comments: post.comments + 1 };
-          if (type === "share") return { ...post, shares: post.shares + 1 };
-        }
-        return post;
-      })
-    );
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-black dark:text-white">
@@ -74,9 +95,9 @@ export default function FeedPage() {
         {/* PROFILE + MENU */}
         <div className="relative flex items-center gap-4">
           <img
-            src="https://i.pravatar.cc/40"
+            src={currentUser?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser?.full_name || currentUser?.username || 'User')}&background=10b981&color=fff`}
             alt="Profile"
-            className="w-10 h-10 rounded-full cursor-pointer border border-gray-300 dark:border-gray-700"
+            className="w-10 h-10 rounded-full cursor-pointer border border-gray-300 dark:border-gray-700 object-cover"
             onClick={() => navigate("/profile")}
           />
         </div>
@@ -106,7 +127,11 @@ export default function FeedPage() {
               icon={<LogOut />} 
               text="Logout" 
               sidebarOpen={sidebarOpen}
-              onClick={() => navigate("/login")}
+              onClick={() => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                navigate("/login");
+              }}
             />
           </div>
         </aside>
@@ -118,42 +143,78 @@ export default function FeedPage() {
         >
           <h2 className="text-3xl font-bold mb-6">Your Feed</h2>
 
-          <div className="space-y-6">
-            {posts.map(post => (
-              <div
-                key={post.id}
-                className="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700"
-              >
-                {/* HEADER */}
-                <div className="flex items-center gap-4 mb-3">
-                  <img
-                    src={`https://i.pravatar.cc/40?img=${post.id + 1}`}
-                    className="w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700"
-                  />
-                  <div>
-                    <h3 className="font-semibold">User {post.id + 1}</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Nov {post.id + 5}, 2025</span>
+          {/* Loading State */}
+          {loading && (
+            <div className="text-center py-10">
+              <p className="text-gray-500 dark:text-gray-400">Loading profiles...</p>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg mb-6">
+              <p className="text-red-800 dark:text-red-200">{error}</p>
+            </div>
+          )}
+
+          {/* Profiles Feed */}
+          {!loading && !error && profiles.length === 0 && (
+            <div className="text-center py-10">
+              <p className="text-gray-500 dark:text-gray-400">No profiles found. Be the first to join!</p>
+            </div>
+          )}
+
+          {!loading && !error && profiles.length > 0 && (
+            <div className="space-y-6">
+              {profiles.map(profile => (
+                <div
+                  key={profile.id}
+                  className="relative p-6 bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700"
+                >
+                  {/* HEADER */}
+                  <div className="flex items-center gap-4 mb-3">
+                    <img
+                      src={profile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.full_name || profile.username)}&background=10b981&color=fff`}
+                      className="w-12 h-12 rounded-full border border-gray-300 dark:border-gray-700 object-cover"
+                      alt={profile.full_name || profile.username}
+                    />
+                    <div>
+                      <h3 className="font-semibold">{profile.full_name || profile.username}</h3>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">@{profile.username}</span>
+                    </div>
+                  </div>
+
+                  {/* CONTENT */}
+                  <div className="mt-2">
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Member since {new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                    </p>
+                    {profile.role && (
+                      <span className="inline-block mt-2 px-3 py-1 text-xs font-medium bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full">
+                        {profile.role}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* REACTIONS */}
+                  <div className="flex items-center gap-6 mt-4 text-gray-500 dark:text-gray-400">
+                    <button className="flex items-center gap-1 hover:text-emerald-500 cursor-pointer transition">
+                      <Heart size={18} /> Like
+                    </button>
+                    <button 
+                      onClick={() => navigate("/chat")}
+                      className="flex items-center gap-1 hover:text-emerald-500 cursor-pointer transition"
+                    >
+                      <MessageCircle size={18} /> Message
+                    </button>
+                    <button className="flex items-center gap-1 hover:text-emerald-500 cursor-pointer transition">
+                      <Share2 size={18} /> Share
+                    </button>
                   </div>
                 </div>
-
-                {/* CONTENT */}
-                <p className="mt-2">{post.content}</p>
-
-                {/* REACTIONS */}
-                <div className="flex items-center gap-6 mt-4 text-gray-500 dark:text-gray-400">
-                  <button onClick={() => handleReaction(post.id, "like")} className="flex items-center gap-1 hover:text-emerald-500 cursor-pointer">
-                    <Heart size={18} /> {post.likes}
-                  </button>
-                  <button onClick={() => handleReaction(post.id, "comment")} className="flex items-center gap-1 hover:text-emerald-500 cursor-pointer">
-                    <MessageCircle size={18} /> {post.comments}
-                  </button>
-                  <button onClick={() => handleReaction(post.id, "share")} className="flex items-center gap-1 hover:text-emerald-500 cursor-pointer">
-                    <Share2 size={18} /> {post.shares}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </main>
 
         {/* RIGHT SIDEBAR */}
@@ -161,23 +222,34 @@ export default function FeedPage() {
           <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Friend Suggestions</h3>
           
           <div className="space-y-3 overflow-y-auto">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                <div className="flex items-center gap-3 flex-1">
-                  <img
-                    src={`https://i.pravatar.cc/40?img=${i + 20}`}
-                    className="w-10 h-10 rounded-full border border-emerald-500"
-                  />
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white">User {i + 20}</h4>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">3 mutual friends</p>
+            {loading ? (
+              <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>
+            ) : friendSuggestions.length === 0 ? (
+              <p className="text-center text-gray-500 dark:text-gray-400">No suggestions yet</p>
+            ) : (
+              friendSuggestions.map((profile) => (
+                <div key={profile.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <div className="flex items-center gap-3 flex-1">
+                    <img
+                      src={profile.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.full_name || profile.username)}&background=10b981&color=fff`}
+                      className="w-10 h-10 rounded-full border border-emerald-500 object-cover"
+                      alt={profile.full_name || profile.username}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                        {profile.full_name || profile.username}
+                      </h4>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                        @{profile.username}
+                      </p>
+                    </div>
                   </div>
+                  <button className="p-1.5 rounded-full hover:bg-emerald-500/20 text-emerald-500 transition cursor-pointer shrink-0">
+                    <Plus size={18} />
+                  </button>
                 </div>
-                <button className="p-1.5 rounded-full hover:bg-emerald-500/20 text-emerald-500 transition cursor-pointer">
-                  <Plus size={18} />
-                </button>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </aside>
       </div>

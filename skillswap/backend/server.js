@@ -25,6 +25,14 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 
+// Basic health check
+app.get("/", (req, res) => {
+  res.json({ message: "SkillSwap Backend API" });
+});
+
+// Use the PostgreSQL user routes
+app.use("/api/users", userRoutes);
+
 /**
  * Helper: extract access token from Authorization header
  */
@@ -217,6 +225,25 @@ app.put('/auth/profile', async (req, res) => {
     return res.json({ profile: profileResp.data });
   } catch (err) {
     console.error('Update profile error', err);
+    return res.status(500).json({ error: 'internal server error' });
+  }
+});
+
+/**
+ * Get all profiles (public - for friend suggestions)
+ */
+app.get('/api/profiles', async (req, res) => {
+  try {
+    const { data, error } = await supabaseService
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) return res.status(400).json({ error: error.message });
+
+    return res.json({ profiles: data || [] });
+  } catch (err) {
+    console.error('Get profiles error', err);
     return res.status(500).json({ error: 'internal server error' });
   }
 });

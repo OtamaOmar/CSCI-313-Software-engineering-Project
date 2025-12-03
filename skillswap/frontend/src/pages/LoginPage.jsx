@@ -1,17 +1,52 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../services/api";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Replace with actual login API call
-    setError("Invalid email or password. Please try again.");
-    setShowError(true);
+    setLoading(true);
+    setShowError(false);
+
+    try {
+      const data = await loginUser(formData.email, formData.password);
+      
+      // Store session token and profile in localStorage
+      if (data.session && data.session.access_token) {
+        localStorage.setItem("token", data.session.access_token);
+        localStorage.setItem("refresh_token", data.session.refresh_token);
+      }
+      
+      if (data.profile) {
+        localStorage.setItem("user", JSON.stringify(data.profile));
+      }
+      
+      // Redirect to feed page
+      navigate("/feed");
+    } catch (err) {
+      setError(err.message || "Invalid email or password. Please try again.");
+      setShowError(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const closeError = () => {
@@ -56,8 +91,11 @@ export default function LoginPage() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               required
+              value={formData.email}
+              onChange={handleChange}
               className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none transition"
               placeholder="you@example.com"
             />
@@ -70,8 +108,12 @@ export default function LoginPage() {
             </label>
             <input
               id="password"
+              name="password"
               type={showPassword ? "text" : "password"}
               required
+              autoComplete="current-password"
+              value={formData.password}
+              onChange={handleChange}
               className="px-4 py-2 w-full rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none transition pr-10"
               placeholder="••••••••"
             />
@@ -104,9 +146,10 @@ export default function LoginPage() {
           {/* Login button */}
           <button
             type="submit"
-            className="btn btn-primary w-full cursor-pointer"
+            disabled={loading}
+            className="btn btn-primary w-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
 
           {/* Sign up link */}
