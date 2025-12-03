@@ -5,7 +5,12 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage"; // ✅ Import the login page
 import LearnMorePage from "./pages/LearnMorePage";
 import FeedPage from "./pages/FeedPage";
+<<<<<<< HEAD
 import ProfilePage from "./pages/ProfilePage";
+=======
+import ChatPage from "./pages/chat";
+import ForgetPassPage from "./pages/ForgetPassPage";
+>>>>>>> Hamza-branch
 
 export default function App() {
   return (
@@ -24,8 +29,16 @@ export default function App() {
         {/* 📰 FEED PAGE (NEW) */}
         <Route path="/feed" element={<FeedPage />} />
 
+<<<<<<< HEAD
         {/* 👤 PROFILE PAGE */}
         <Route path="/profile" element={<ProfilePage />} />
+=======
+        {/* 💬 CHAT PAGE */}
+        <Route path="/chat" element={<ChatPage />} />
+
+        {/* 🔁 Forgot Password */}
+        <Route path="/forget-password" element={<ForgetPassPage />} />
+>>>>>>> Hamza-branch
 
       </Routes>
     </Router>
