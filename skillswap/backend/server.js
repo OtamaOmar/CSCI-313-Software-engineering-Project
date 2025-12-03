@@ -1,8 +1,10 @@
-<<<<<<< HEAD
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const { createClient } = require('@supabase/supabase-js');
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { createClient } from "@supabase/supabase-js";
+import userRoutes from "./routes/userRoutes.js";
+
+dotenv.config();
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
@@ -21,7 +23,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 /**
  * Helper: extract access token from Authorization header
@@ -219,24 +221,9 @@ app.put('/auth/profile', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`SkillSwap auth server listening on http://localhost:${PORT}`);
-});
-=======
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import userRoutes from "./routes/userRoutes.js";
-
-dotenv.config();
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
+// User routes from main branch
 app.use("/api/users", userRoutes);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Backend running on port ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`SkillSwap backend running on http://localhost:${PORT}`);
 });
->>>>>>> main

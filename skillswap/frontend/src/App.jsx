@@ -1,29 +1,44 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage"; // ✅ Import the login page
+import SignUp from "./pages/SignUp"; // ✅ Import the sign up page
 import LearnMorePage from "./pages/LearnMorePage";
-
-// 🔧 Optional: Future pages can be added here
-// import Dashboard from "./pages/Dashboard";
-// import Profile from "./pages/Profile";
+import FeedPage from "./pages/FeedPage";
+import ProfilePage from "./pages/ProfilePage";
+import ChatPage from "./pages/chat";
+import ForgetPassPage from "./pages/ForgetPassPage";
 
 export default function App() {
   return (
     <Router>
       <Routes>
+
         {/* 🏠 Default Landing Page */}
         <Route path="/" element={<LandingPage />} />
 
         {/* 🔐 Login Page */}
         <Route path="/login" element={<LoginPage />} />
 
+        {/* ✍️ Sign Up Page */}
+        <Route path="/signup" element={<SignUp />} />
+
         {/* 📚 Learn More Page */}
         <Route path="/learn-more" element={<LearnMorePage />} />
 
-        {/* 🧭 Future routes (uncomment when ready) */}
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-        {/* <Route path="/profile" element={<Profile />} /> */}
+        {/* 📰 FEED PAGE (NEW) */}
+        <Route path="/feed" element={<FeedPage />} />
+
+        {/* 👤 PROFILE PAGE */}
+        <Route path="/profile" element={<ProfilePage />} />
+
+        {/* 💬 CHAT PAGE */}
+        <Route path="/chat" element={<ChatPage />} />
+
+        {/* 🔁 Forgot Password */}
+        <Route path="/forget-password" element={<ForgetPassPage />} />
+
       </Routes>
     </Router>
   );
