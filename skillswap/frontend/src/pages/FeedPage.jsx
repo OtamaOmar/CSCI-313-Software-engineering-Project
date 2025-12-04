@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Search, Users, LogOut, Heart, MessageCircle, Share2, Plus, Mail, Bell, Home } from "lucide-react";
-import { getAllProfiles, getCurrentUserProfile } from "../services/api";
+import { getAllProfiles, getCurrentUserProfile, isAuthenticated } from "../services/api";
 
 export default function FeedPage() {
   const navigate = useNavigate();
@@ -13,11 +13,10 @@ export default function FeedPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Check if user is logged in
+  // Authentication guard - redirect if not logged in
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
+    if (!isAuthenticated()) {
+      navigate("/login", { replace: true });
     }
   }, [navigate]);
 
@@ -26,6 +25,7 @@ export default function FeedPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setError("");
         
         // Fetch current user profile
         const userProfile = await getCurrentUserProfile();
@@ -33,6 +33,11 @@ export default function FeedPage() {
         
         // Fetch all profiles
         const allProfiles = await getAllProfiles();
+        
+        // Ensure allProfiles is an array
+        if (!Array.isArray(allProfiles)) {
+          throw new Error("Invalid profiles data format");
+        }
         
         // Filter out current user from profiles feed
         const otherProfiles = allProfiles.filter(p => p.id !== userProfile.id);
@@ -43,14 +48,21 @@ export default function FeedPage() {
         setFriendSuggestions(shuffled.slice(0, 8));
         
       } catch (err) {
+        console.error("FeedPage fetchData error:", err);
         setError(err.message || "Failed to load data");
+        // If authentication error, redirect to login
+        if (err.message.includes("token") || err.message.includes("authentication")) {
+          navigate("/login", { replace: true });
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
+    if (isAuthenticated()) {
+      fetchData();
+    }
+  }, [navigate]);
 
   // DARK MODE
   useEffect(() => {

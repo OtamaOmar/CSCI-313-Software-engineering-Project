@@ -2,13 +2,14 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage"; // ✅ Import the login page
-import SignUp from "./pages/SignUp"; // ✅ Import the sign up page
+import LoginPage from "./pages/LoginPage";
+import SignUp from "./pages/SignUp";
 import LearnMorePage from "./pages/LearnMorePage";
 import FeedPage from "./pages/FeedPage";
 import ProfilePage from "./pages/ProfilePage";
 import ChatPage from "./pages/chat";
 import ForgetPassPage from "./pages/ForgetPassPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
@@ -27,14 +28,14 @@ export default function App() {
         {/* 📚 Learn More Page */}
         <Route path="/learn-more" element={<LearnMorePage />} />
 
-        {/* 📰 FEED PAGE (NEW) */}
-        <Route path="/feed" element={<FeedPage />} />
+        {/* 📰 FEED PAGE (Protected) */}
+        <Route path="/feed" element={<ProtectedRoute><FeedPage /></ProtectedRoute>} />
 
-        {/* 👤 PROFILE PAGE */}
-        <Route path="/profile" element={<ProfilePage />} />
+        {/* 👤 PROFILE PAGE (Protected) */}
+        <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 
-        {/* 💬 CHAT PAGE */}
-        <Route path="/chat" element={<ChatPage />} />
+        {/* 💬 CHAT PAGE (Protected) */}
+        <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
 
         {/* 🔁 Forgot Password */}
         <Route path="/forget-password" element={<ForgetPassPage />} />

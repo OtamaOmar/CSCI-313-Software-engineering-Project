@@ -4,6 +4,7 @@ import { registerUser, loginUser, getAllUsers } from "../controllers/userControl
 const router = express.Router();
 
 router.post("/register", registerUser);
+router.post("/auth/signup", registerUser);
 router.post("/login", loginUser);
 router.get("/", getAllUsers);
 
